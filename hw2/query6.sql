@@ -1,0 +1,3 @@
+SELECT COUNT(DISTINCT Item.UserID)
+FROM Item, Bid
+WHERE Item.UserID = Bid.UserID;

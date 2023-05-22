@@ -1,0 +1,168 @@
+<?xml version="1.0"?>
+<pset>
+
+    <!--
+        CS 564, SPRING 2023
+        HOMEWORK 1 SUBMISSION TEMPLATE
+
+        Please copy and paste your SQL queries into the appropriate spots below. 
+
+        When submitting SQL queries, please do not include the initial 
+        %sql or %%sql IPython commands. Just include the SQL code.
+
+        DO NOT DELETE THE <![CDATA[ ... ]]> LINES IN EACH <answer> TAG!
+        Doing so will break the autograder. To avoid accidentally breaking
+        something, please leave all existing comments in this template
+        intact in your submission.
+    -->
+
+    <student>
+        <name>
+            <!-- Insert your full name on the line below. -->
+            Salman Munaf
+        </name>
+        <studentid>
+            <!-- Insert your student ID number below. -->
+            9073929474
+        </studentid>
+    </student>
+
+
+    <!-- BEGIN PROBLEM 1 -->
+    <answer number="1a">
+        <!-- Paste your solution to problem 1, part (a) below this line. --><![CDATA[
+        SELECT A.i AS i, A.j AS j, (A.val + B.val) AS val
+        FROM A, B
+        WHERE A.i = B.i AND A.j = B.j
+        ORDER BY A.i, A.j;
+
+        ]]><!-- End problem 1, part (a). -->
+    </answer>
+    <answer number="1b">
+        <!-- Paste your solution to problem 1, part (b) below this line. --><![CDATA[
+        SELECT SUM(A.val * B.val) AS DotProduct
+        FROM A, B
+        WHERE A.i = B.i AND A.j = 1 AND B.j = 2;
+
+        ]]><!-- End problem 1, part (b). -->
+    </answer>
+    <answer number="1c">
+        <!-- Paste your solution to problem 1, part (c) below this line. --><![CDATA[
+        SELECT A.i, B.j, SUM(A.val * B.val) AS val
+        FROM A,B
+        WHERE A.j = B.i
+        GROUP BY A.i, B.j;
+
+        ]]><!-- End problem 1, part (c). -->
+    </answer>
+    <answer number="1d">
+        <!-- Paste your solution to problem 1, part (d) below this line. --><![CDATA[
+        WITH square AS 
+            (SELECT A1.i, A2.j, SUM(A1.val * A2.val) AS val
+            FROM A AS A1,A AS A2
+            WHERE A1.j = A2.i
+            GROUP BY A1.i, A2.j)
+        SELECT sq1.i, A.j, SUM(sq1.val * A.val) AS val
+        FROM square AS sq1, A
+        WHERE sq1.j = A.i
+        GROUP BY sq1.i, A.j;
+
+        ]]><!-- End problem 1, part (d). -->
+    </answer>
+    <!-- END PROBLEM 1 -->
+
+
+    <!-- BEGIN PROBLEM 2 -->
+    <answer number="2a">
+        <!-- Paste your solution to problem 2, part (a) below this line. --><![CDATA[
+        WITH HolidaySales AS (
+            SELECT S.store, SUM(S.WeeklySales) AS HolidaySales
+            FROM Sales S, Holidays H
+            WHERE S.WeekDate = H.WeekDate AND H.IsHoliday = "TRUE"
+            GROUP BY S.store )
+        SELECT H2.store AS Store, MAX(H2.HolidaySales) AS AllSales
+        FROM HolidaySales AS H2;
+
+        ]]><!-- End problem 2, part (a). -->
+    </answer>
+    <answer number="2b">
+        <!-- Paste your solution to problem 2, part (b) below this line. --><![CDATA[
+        WITH HolSales AS (
+        SELECT    H.WeekDate, H.IsHoliday,
+                SUM (S.WeeklySales) AS AllSales
+        FROM      Sales S, Holidays H
+        WHERE     S.WeekDate = H.WeekDate
+        GROUP BY  H.WeekDate, H.IsHoliday)
+        SELECT  COUNT(*) AS NumNonHolidays
+        FROM    HolSales
+        WHERE   IsHoliday = "FALSE" AND
+                AllSales > (SELECT  AVG (AllSales)
+                            FROM    HolSales
+                            WHERE   IsHoliday = "TRUE");
+
+        ]]><!-- End problem 2, part (b). -->
+    </answer>
+    <answer number="2c">
+        <!-- Paste your solution to problem 2, part (c) below this line. --><![CDATA[
+        SELECT    R.Type, SUM (S.WeeklySales) AS TotalSales
+        FROM      Stores R, Sales S
+        WHERE     R.Store = S.Store AND substr (S.WeekDate, 6, 2) IN ('06','07','08')
+        GROUP BY  R.Type;
+
+        ]]><!-- End problem 2, part (c). -->
+    </answer>
+    <!-- END PROBLEM 2 -->
+
+
+    <!-- BEGIN PROBLEM 3 -->
+    <answer number="3a">
+        <!-- Paste your solution to problem 3, part (a) below this line. --><![CDATA[
+        SELECT B AS company, d AS distance FROM (
+            SELECT s1.A AS A, s1.B AS B, s1.d AS d
+            FROM streets s1 
+                UNION
+            SELECT s1.A AS A, s2.B AS B, s1.d + s2.d AS d
+            FROM streets s1, streets s2
+            WHERE s1.B = s2.A AND s2.B <> s1.A
+                UNION
+            SELECT s1.A AS A, s3.B AS B, s1.d + s2.d + s3.d AS d
+            FROM streets s1, streets s2, streets s3
+            WHERE s1.B = s2.A AND s2.B = s3.A
+                AND s2.B <> s1.A AND s3.B <> s2.A AND s3.B <> s1.A
+        )
+        WHERE A = 'UW-Madison' AND d <= 9;
+
+        ]]><!-- End problem 3, part (a). -->
+    </answer>
+    <answer number="3b">
+        <!-- Paste your solution to problem 3, part (b) below this line. --><![CDATA[
+        DROP VIEW IF EXISTS non_cyclic_distances;
+        CREATE VIEW non_cyclic_distances AS
+        SELECT s1.A, s1.B, s1.d AS dist
+        FROM streets s1
+            UNION
+        SELECT s1.A, s2.B, s1.d + s2.d AS dist
+        FROM streets s1, streets s2
+        WHERE s1.B = s2.A;
+
+        SELECT d1.B AS company_1, d2.B AS company_2, MIN(d1.dist + d2.dist) as distance
+        FROM non_cyclic_distances d1, non_cyclic_distances d2
+        WHERE d1.A = 'UW-Madison' AND d2.A = 'UW-Madison' AND d1.B > d2.B
+        GROUP BY d1.B, d2.B
+        HAVING distance <= 15;
+
+        ]]><!-- End problem 3, part (b). -->
+    </answer>
+    <answer number="3c">
+        <!-- Paste your solution to problem 3, part (c) below this line. --><![CDATA[
+        SELECT s1.A AS A, s2.A AS B, s3.A AS C, (s1.d + s2.d + s3.d) AS distance
+        FROM streets s1, streets s2, streets s3
+        WHERE s1.B = s2.A AND s2.B = s3.A AND s3.B = s1.A 
+        AND s1.id < s2.id AND s2.id < s3.id;
+
+        ]]><!-- End problem 3, part (c). -->
+    </answer>
+    <!-- END PROBLEM 3 -->
+
+
+</pset>

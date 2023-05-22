@@ -1,0 +1,5 @@
+SELECT COUNT(DISTINCT U.UserID)
+FROM Item I 
+LEFT JOIN User U
+ON I.UserID = U.UserID
+WHERE U.Rating > 1000;

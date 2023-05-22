@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<pset>
+
+    <!--
+        CS 564, Spring 2023
+        HOMEWORK 3 SUBMISSION TEMPLATE
+
+        Please copy and paste your SQL queries (and potentially Python and Latex code) 
+	into the appropriate spots below. 
+
+        When submitting SQL queries, please do not include the initial 
+        %sql or %%sql IPython commands. Just include the SQL code.
+
+        DO NOT DELETE THE <![CDATA[ ... ]]> LINES IN EACH <answer> TAG!
+        Doing so will break the autograder. To avoid accidentally breaking
+        something, please leave all existing comments in this template
+        intact in your submission.
+    -->
+
+    <student>
+        <name>
+            <!-- Insert your full name on the line below. -->
+            Salman Munaf
+        </name>
+        <studentid>
+            <!-- Insert your student ID number below. -->
+            9073929474
+        </studentid>
+    </student>
+
+
+    <!-- BEGIN PROBLEM 1 -->
+    <answer number="1a">
+        <!-- Paste your solution to problem 1, part (a) below this line. --><![CDATA[
+            SELECT *
+            FROM hospital h1, hospital h2
+            WHERE (h1.provider = h2.provider) 
+            and not (h1.hospital = h2.hospital and
+                h1.address = h2.address and
+                h1.city = h2.city and
+                h1.state = h2.state and
+                h1.zip = h2.zip and
+                h1.county = h2.county and
+                h1.phone_number = h2.phone_number and
+                h1.hospital_type = h2.hospital_type and
+                h1.hospital_owner = h2.hospital_owner and
+                h1.emergency_service = h2.emergency_service and
+                h1.condition = h2.condition and
+                h1.measure_code = h2.measure_code) LIMIT 1;
+
+        ]]><!-- End problem 1, part (a). -->
+    </answer>
+    <answer number="1b">
+        <!-- Paste your solution to problem 1, part (b) below this line. --><![CDATA[
+            SELECT *
+            FROM hospital h1, hospital h2
+            WHERE (h1.zip = h2.zip) and not (h1.city = h2.city and h1.state = h2.state)
+
+        ]]><!-- End problem 1, part (b). -->
+    </answer>
+    <!-- END PROBLEM 1 -->
+
+
+    <!-- BEGIN PROBLEM 2 -->
+    <answer number="2a">
+        <!-- Paste your solution to problem 2, part (a) below this line. --><![CDATA[
+            answer = True
+            explanation = "Yes. The closure of {AB}+ ={ABCDEF}"
+
+        ]]><!-- End problem 2, part (a). -->
+    </answer>
+    <answer number="2b">
+        <!-- Paste your solution to problem 2, part (b) below this line. --><![CDATA[
+            answer = False
+            explanation = "The intersection of attributes in relation CDE and EFA is not a superkey"
+
+        ]]><!-- End problem 2, part (b). -->
+    </answer>    
+    <answer number="2c">
+        <!-- Paste your solution to problem 2, part (c) below this line. --><![CDATA[
+            answer = False
+            explanation = "No because A -> D is not present in the closure of unions of FDs on the three relations"
+
+        ]]><!-- End problem 2, part (c). -->
+    </answer>
+    <answer number="2d">
+        <!-- Paste your solution to problem 2, part (d) below this line. --><![CDATA[
+            answer = True
+            explanation = "Yes. The closure of {A}+ is {A,C,D,E,F}."
+
+        ]]><!-- End problem 2, part (d). -->
+    </answer>
+    <answer number="2e">
+        <!-- Paste your solution to problem 2, part (e) below this line. --><![CDATA[
+            answer = False
+            explanation = "No. The dependency A -> D violates the BCNF condition as {A} is not a superkey."
+
+        ]]><!-- End problem 2, part (e). -->
+    </answer>
+    <!-- END PROBLEM 2 -->
+
+    <!-- BEGIN PROBLEM 3 -->
+    <answer number="3a">
+        <!-- Paste your solution to problem 3, part (a) below this line. --><![CDATA[
+            $$ \pi_{name}( \sigma_{affiliation="UW-Madison"} (Person) \Join Author \Join Article \Join \pi_{confid}(\sigma_{year=2021} (Conference)))$$
+
+
+        ]]><!-- End problem 3, part (a). -->
+    </answer>
+    <answer number="3b">
+        <!-- Paste your solution to problem 3, part (b) below this line. --><![CDATA[
+            $$\pi_{oname} (\sigma_{name="John\: Doe"}(Person) \Join Author \Join  \rho_{pid \rightarrow oid} (Author)\Join \rho_{pid \rightarrow oid, {name \rightarrow oname}}\sigma_{name \neq "John\: Doe"}(Author)))$$
+
+
+        ]]><!-- End problem 3, part (b). -->
+    </answer>
+    <answer number="3c">
+        <!-- Paste your solution to problem 3, part (c) below this line. --><![CDATA[
+            $$\gamma_{pid, COUNT(artid)} (Article \Join \sigma_{name ="PODS"}(Conference) \Join Author)$$
+
+        ]]><!-- End problem 3, part (c). -->
+    </answer>
+    <!-- END PROBLEM 3 -->
+
+</pset>
